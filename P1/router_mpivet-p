@@ -1,0 +1,4 @@
+FROM frrouting/frr
+COPY daemons /etc/frr/daemons
+RUN touch /etc/frr/frr.conf /etc/frr/vtysh.conf
+RUN apk add bridge-utils

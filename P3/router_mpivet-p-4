@@ -1,0 +1,25 @@
+conf t
+  inter lo
+    ip addr 1.1.1.4/32
+    ip ospf area 0
+  router ospf
+    passive-interface default
+    redistribute connected
+  inter eth2
+    ip addr 10.1.1.10/30
+    no ip ospf passive
+    ip ospf area 0
+  exit
+  router bgp 42
+    bgp router-id 1.1.1.4
+    no bgp default ipv4-unicast
+    neighbor madrid peer-group
+    neighbor madrid remote-as 42
+    neighbor madrid capability extended-nexthop
+    neighbor 1.1.1.1 peer-group madrid
+    address-family l2vpn evpn
+      neighbor madrid activate
+      advertise-all-vni
+    exit-address-family
+  end
+exit
