@@ -14,9 +14,8 @@ config_host()
 		dexe $1 'ip link set eth0 down'
 		dexe $1 'ip link set eth0 name eth1'
 		dexe $1 'ip link set eth1 up'
-		#Assign IP and default gateway
+		#Assign IP to eth1
 		dexe $1 "ip addr add 30.1.1.$3/24 dev eth1"
-		dexe $1 "ip route add default via 30.1.1.3"
 	else
 		echo "Warning: $2 already configured!"
 	fi
@@ -30,13 +29,11 @@ config_router()
 	if [[ $? -eq 1 ]]; then
 		#Assign ips to interfaces
 		dexe $1 "ip addr add 10.1.1.$3/24 dev eth0"
-		dexe $1 "ip addr add 30.1.1.3/24 dev eth1"
 
 		#Create interfaces
 		dexe $1 "ip link add name br0 type bridge"
 		#dexe $1 "ip link add name vxlan10 type vxlan id 10 remote 10.1.1.$ip local 10.1.1.$3 dstport 4789 dev eth0"
 		dexe $1 "ip link add name vxlan10 type vxlan id 10 group 239.1.1.1 dstport 4789 dev eth0"
-		dexe $1 "ip addr add 30.1.1.3/24 dev vxlan10"
 
 		#Set up interfaces
 		dexe $1 "ip link set br0 up"
@@ -49,7 +46,7 @@ config_router()
 		#Add unspecified mac-addr to the forwarding table for vxlan10
 		dexe $1 "bridge fdb append 00:00:00:00:00:00 dev vxlan10 dst 10.1.1.$ip"
 	else
-		echo "Warning: $2 already configured!"
+		echo -e "\033[93mWarning\033[0m: $2 already configured!"
 	fi
 }
 

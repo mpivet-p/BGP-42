@@ -41,6 +41,6 @@ for line in $(docker ps -q); do
 	if [[ $host_type == "router" ]]; then
 		config_router $line $name $host_nbr
 	else
-		echo -e "\033[95mWarning\033[0m: Unknown container $name!" 1>&2
+		echo -e "\033[93mWarning\033[0m: Unknown container $name!" 1>&2
 	fi
 done
